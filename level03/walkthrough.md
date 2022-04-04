@@ -20,7 +20,7 @@ You can see the "proof\_printf\_security\_hole.png" picture, it's works, and we 
 If we jump manually to *v+62 from *v+64 and continue in gdb, we can see, it's execute a shell, we have to do that !
 
 This printf security hole can modify the value to an address, in our case, it works like that:  
-"\<address\_to\_modify>\<size\_to\_increment\_the\_address>\<Direct\_Access\_Parameter>"  
+"\<address\_to\_modify>\<NB\_char\_print\_here\_is\_the\_value\_to\_the\_address>\<Direct\_Access\_Parameter>"  
 
 We can do that like this in gdb:  
   
