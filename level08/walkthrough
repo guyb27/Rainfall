@@ -1,0 +1,17 @@
+Pour lancer un shell il faut ne entrer dans les jumps a partir de *main+357.
+Pour ce faire il faut entrer "login" dans le fgets et remplir les conditions suivantes:
+_Pouvoir acceder a la variables auth (0x8049aac), sinon le programme segfault
+_Le pointeur contenu dans auth doit etre une adresse et sont contenu + 0x20 doit etre accessible et doit contenir une valeur autre que 0x0
+
+Step1: "auth "
+Afin de faire un malloc qui aura la valeur 0x0804a9c0 a service qui a deja pour adresse 0x8049aac
+
+Step2: "service"
+Afin de creer un nouveau malloc sous la forme d'un strdup(str_stdin+7) qui aura une adresse superieur de 0x10 (0x804a9d0) par rapport au malloc precedent (valeur de auth) et une valeur meme si nous n'en n'avons pas encore besoin pour l instant
+
+Step3: "service"
+Afin de creer un nouveau malloc sous la forme d'un strdup(str_stdin+7) qui aura une adresse superieur de 0x20 (0x804a9e0) par rapport au premier malloc (valeur de auth) et une valeur
+
+Step4: "login"
+Nous remplissons maintenant les conditions pour arriver a *main+401 qui n'est autre que la commande system("/bin/sh") qui nous ouvre un "beau" shell
+
