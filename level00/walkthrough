@@ -1,8 +1,0 @@
-At the main+25 we can see the binary compare our argument with 0x1a7 (423 in decimal) with the command below:
-
-gdb -batch -ex "set disassembly-flavor intel" -ex "b *main+25" -ex "run" -ex "continue" --args ./level0 "423"
-
-I we pass the 423 argument, we have a shell with the level1 user right for get the level1 flag like below:
-
-$ cat ../level1/.pass
-1fe8a524fa4bec01ca4ea2a869af2a02260d4a7d5fe7e7c24d8617e6dca12d3a
