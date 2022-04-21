@@ -1,3 +1,14 @@
+# level 07
+
+We can also see that the program get the first argument line parameter at `main+103` and `main+106` :
+
+```gdb
+(gdb) x/wx $ebp+0xc
+0xbffff734:     0xbffff7c4
+(gdb) x/s *0xbffff7c4
+0xbffff8e9:      "/home/user/level7/level7"
+```
+
 Legend:
 => endroit ou l on est dans GDB
 *=> Moments cle qui aboutissent a l exploitation
