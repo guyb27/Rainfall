@@ -10,7 +10,7 @@ int main(int ac, char **av)//av[1], av[2]
 
 
 	memcpy(0xbffff6d4, av[2], ecx);
-	if (*(void*)0xbffff6fc == 0x574f4c46)// on compare le contenu de l adresse 0xbffff6fc1
+	if (*(void*)0xbffff6fc == 0x574f4c46)// on compare le contenu de l adresse 0xbffff6fc
 //(gdb) p/d 0xbffff6fc-0xbffff6d4
 //$1 = 40
 //Nous devons donc placer 
