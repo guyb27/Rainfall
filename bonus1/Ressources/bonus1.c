@@ -21,6 +21,15 @@ int main(int ac, char **av)//av[1], av[2]
 //Si on met -1 en premier argument, on obtient 0xfffffffc en troisieme argument de memcpy, et 0xfffffff8 si on met -2.
 //On peut en deduire que nous demarrons de 4294967295 et que chaque unite negative decremente ce nombre de 4.
 
+//Nous avone une vulnerabilite de conversion de signe, Type Demotion/Narrowing ou de int min (je pense plus a une conversion de signe par rapport au ), comme indiquer sur cette page:
+//https://blog.feabhas.com/2014/10/vulnerabilities-in-c-when-integers-go-bad/#What_are_the_potential_underlying_problems
+//maxInt: 2 147 483 647
+//(gdb) p/d 0xc000000c
+//$3 = 3221225484
+//(gdb) x/wx $esp+0x3c
+//0xbffff6fc:     0xc000000c
+//Le premier c represente le bit de signe
+
 (gdb) p/d 0xffffffff
 $4 = 4294967295
 (gdb) p/d 4294967295-44
