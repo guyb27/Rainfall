@@ -62,13 +62,12 @@ int main(int ac, char **av)
 	strncpy((void*)0xbffff300, av[1], 40);//First string: 0xbffff300+0x28=0xbffff328
 	strncpy((void*)0xbffff300+40, av[2], 72);//First string: 0xbffff328 (La suite du strncpy precedent)
 	(void*)0xbfffff3c=getenv("LANG");
-	if (*0xbfffff3c = 0x0)
-	{
-	}
-	else if (!memcmp(0xbfffff3c, "fi, 2"))//Le contenu de la e_Var "LANG"
+	if (!memcmp(0xbfffff3c, "fi, 2"))//Le contenu de la e_Var "LANG"
 		language = 1;
 	else if (!memcmp(0xbfffff3c, "nl", 2))
 		language = 2;
+	else
+		language = 0;
 //(gdb) x/wx $edi
 //0xbffff2b0:     0xbfffff3c
 //(gdb) x/s 0xbfffff3c
