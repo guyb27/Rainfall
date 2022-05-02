@@ -7,6 +7,7 @@ int language = 0x2;
 // "Hyvää päivää "
 
 int greetuser(char *buf) {
+	//Save $eip address: 0xbffff48c
     int buff[73];
 
     if (language == 0x1) {
@@ -29,7 +30,7 @@ int greetuser(char *buf) {
     }
 
     // char *hello = "Hello ";
-    strcat((char *)buff, buf);
+    strcat((char *)buff, buf);//buff address:0xbffff440, $eip address: 0xbffff48c
 
     puts((const char *)buff);
     return 1;
@@ -77,3 +78,4 @@ int main(int argc, char *argv[]) {
     //     i += 1;
     // }
 }
+//Ce que nous pouvons conclure de cette exercice c est que en fonction de la valeur de notre variable d environnement "LANG" la string de destination du strcat aura une taille variable, il nous faudra 
