@@ -1,7 +1,7 @@
 
-char *language;//0x8049988
+char *language;
 
-void greetuser(buf)//0xbffff0e0
+void greetuser(buf)
 {
 //ADDRESSE to Save EIP at: 0xbffff2ac
 	if (language[0] == 0x1)
