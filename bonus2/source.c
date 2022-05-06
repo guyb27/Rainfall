@@ -6,56 +6,50 @@ int language = 0x2;
 
 // "Hyvää päivää "
 
-int greetuser(char *buf) {
-    int buff[73];
+int greetuser(int *var_1) {
+    int var_2[18]; // 72 bytes
 
     if (language == 0x1) {
-        // buff[1:19] = "Hyvää päivää " 19 bytes
-        buff[0] = 0xc3767948;
-        buff[1] = 0x20a4c3a4;
-        buff[2] = 0x69a4c370;
-        buff[3] = 0xc3a4c376;
-        buff[4] = 0x0020a4;
+        // var_2[1:19] = "Hyvää päivää " 19 bytes
+        var_2[0] = 0xc3767948;
+        var_2[1] = 0x20a4c3a4;
+        var_2[2] = 0x69a4c370;
+        var_2[3] = 0xc3a4c376;
+        var_2[4] = 0x0020a4;
     } else if (language == 0x2) {
-        // buff[1:18] = "Goedemiddag! " 14 bytes
-        buff[0] = 0x64656f47;
-        buff[1] = 0x64696d65;
-        buff[2] = 0x21676164;
-        buff[3] = 0x0020;
+        // var_2[1:18] = "Goedemiddag! " 14 bytes
+        var_2[0] = 0x64656f47;
+        var_2[1] = 0x64696d65;
+        var_2[2] = 0x21676164;
+        var_2[3] = 0x0020;
     } else {
-        // buff[1:7] = "Hello " 7 bytes
-        buff[0] = 0x6c6c6548;
-        buff[1] = 0x00206f;
+        // var_2[1:7] = "Hello " 7 bytes
+        var_2[0] = 0x6c6c6548;
+        var_2[1] = 0x00206f;
     }
 
     // char *hello = "Hello ";
-    strcat((char *)buff, buf);
+    strcat((char *)var_2, (char *)var_1);
 
-    puts((const char *)buff);
+    puts((const char *)var_2);
     return 1;
 }
 
 int main(int argc, char *argv[]) {
-    char buf[76];
-    // int []
+    // char buf[76];
     char *lang;
+    int var_1[26]; // 104 bytes
 
     if (argc != 3) {
         return (1);
     }
 
-    memset(buf, 0, 76);
-    
-    strncpy(buf, argv[1], 40);
-    // strncpy(&buf[40], argv[2], 32);
+    for (int i = 0; i < 19; i += 1) {
+        var_1[i] = 0;
+    }
 
-    // for (int i = 0; i < 19; i += 1) {
-
-    // }
-    // while (i < 19) {
-    //     memset(&bufint[i], 0, 4);
-    //     i += 1;
-    // }
+    strncpy((char *)&var_1[0], argv[1], 40);
+    strncpy((char *)&var_1[10], argv[2], 32); // fill until var_1[18]
 
     if ((lang = getenv("LANG")) != NULL) {
         if (memcmp(lang, "fi", 2) == 0) {
@@ -65,15 +59,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    printf("%d\n", language);
+    greetuser(var_1);
 
-    greetuser(buf);
-
-    // int bufint[19];
-    // int i = 0;
-
-    // while (i < 19) {
-    //     memset(&bufint[i], 0, 4);
-    //     i += 1;
-    // }
+    return 0;
 }
