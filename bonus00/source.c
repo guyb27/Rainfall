@@ -1,5 +1,5 @@
 
-int p(char *buf, char *dash) {
+void p(char *buf, char *dash) {
     char s[4000];
     char *schr;
 
@@ -10,20 +10,24 @@ int p(char *buf, char *dash) {
     strncpy(buf, s, 20);
 }
 
-int pp(char *buf) {
+void pp(char *buf) {
     int buff_1[4];
     int buff_2[4];
 
     p(buff_1, " - ");
     p(buff_2, " - ");
 
+	strcpy(buf, buff_1);
+
+    int len = strlen(buf);
+    buf[len] = ' ';
+
+    strcat(buf, buff_2);
 }
 
-int main() {
+void main() {
     char buf_0[42];
 
     pp(buf_0);
     puts(buf_0);
-
-    return (0);
 }

@@ -18,25 +18,23 @@ int main()
 {
 	while(1)
 	{
-		printf("%p, %p\n", auth, service);
+		printf("%p, %p\n", auth, service);//On affiche les adresse contenu dans la valeur de nos variables
 		if (!fgets(str_stdin, 0x80, stdin))//128
 			exit (0);
-		if (!strncmp(str_stdin, "auth ", 5))
+		if (!strncmp(str_stdin, "auth ", 5))//De *main+87 a *main+126
 		{
 			malloc_1 = malloc(4);
 			auth = &malloc_1;
-			if (strlen(str_stdin) <= 34)//29 max apres "auth ", mais cette condition est inutile, on peut ne pas rentrer dedans !
-				strcpy(auth, str_stdin+5);//Le contenu ne nous interesse pas du tout !
+			if (strlen(str_stdin) <= 34)//29 max apres "auth ", mais cette condition est inutile, on peut ne pas rentrer dedans ! De *main+156 a *main+196
+				strcpy(auth, str_stdin+5);//Le contenu ne nous interesse pas du tout ! car de toute facon il nous faut auth+32 !
 		}
-		if (!strncmp(str_stdin, "reset", 5))
+		if (!strncmp(str_stdin, "reset", 5))//De *main+222 a *main+261
 			free(malloc_1);
-		if (!strncmp(str_stdin, "service", 6))
+		if (!strncmp(str_stdin, "service", 6))//De *main+276 a *main+315
+			service = strdup(str_stdin+7);
+		if (!strncmp(str_stdin, "login", 5))//De *main+337 a *main+376
 		{
-			*service = strdup(str_stdin+7);
-		}
-		if (!strncmp(str_stdin, "login", 5))
-		{
-			if (*service+0x20 != 0)//Le contenu de service+0x20!
+			if (*auth+0x20 != 0)//
 				system("/bin/sh");
 			else
 				puts("Password:");

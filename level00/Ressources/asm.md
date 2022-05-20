@@ -6,7 +6,7 @@
    0x08048ec3 <+3>:	    and    esp,0xfffffff0
    0x08048ec6 <+6>:	    sub    esp,0x20
    0x08048ec9 <+9>:	    mov    eax,DWORD PTR [ebp+0xc]
-   0x08048ecc <+12>:	add    eax,0x4
+   0x08048ecc <+12>:     add    eax,0x4
    0x08048ecf <+15>:	mov    eax,DWORD PTR [eax]
    0x08048ed1 <+17>:	mov    DWORD PTR [esp],eax
    0x08048ed4 <+20>:	call   0x8049710 <atoi>
