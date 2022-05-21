@@ -60,7 +60,7 @@ int main(int ac, char **av)
 		return (1);
 	memset((void*)0x08048287, 0, 19);
 	strncpy((void*)0xbffff300, av[1], 40);//First string: 0xbffff300+0x28=0xbffff328
-	strncpy((void*)0xbffff300+40, av[2], 72);//First string: 0xbffff328 (La suite du strncpy precedent)
+	strncpy((void*)0xbffff300+40, av[2], 32);//First string: 0xbffff328 (La suite du strncpy precedent)
 	(void*)0xbfffff3c=getenv("LANG");
 	if (!memcmp(0xbfffff3c, "fi, 2"))//Le contenu de la e_Var "LANG"
 		language = 1;
@@ -74,7 +74,8 @@ int main(int ac, char **av)
 //0xbfffff3c:      "fi"
 //(gdb) x/wx $esi
 //0xbffff300:     0x41414141
-	strncpy((void)0xbffff2b0, (void*)0xbffff300, 19*4)//rep movs copie ecx*4 char donc 19*4 char, en gros on copie les 76 premiers bytes des strncpy ligne 78 et 113
+	strncpy((void*)0xbffff2b0, (void*)0xbffff300, 19*4)//rep movs copie ecx*4 char donc 19*4 char, en gros on copie les 76 premiers bytes des strncpy ligne 78 et 113
 	greetuser();
 	return (0);
 }
+//Ce que nous pouvons conclure de cette exercice c est que en fonction de la valeur de notre variable d environnement "LANG" la string de destination du strcat avant son appel aura une taille variable, il nous faudra en tout 80 bytes pour ecraser save eip. Nous controlons les 72 derniers bytes (av[1][:40], av[2][:32]) de la source.
