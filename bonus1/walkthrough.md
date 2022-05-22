@@ -14,26 +14,20 @@ $45 = 40
   
 Nous devons donc pouvoir ecrire 44 octets avec argv[2] a partir de 0xbffff6fc pour ecraser 0xbffff6fc.  
 Seulement, si nous multiplions 9 par 4 nous obtenons 36, ce qui n est pas suffisant pour ecraser les donnees de l adresse que nous devons modifier.  
-Apres avoir reussi ce challenge, j'ai fais des recherche, et j'ai exploiter une vulnerabiliter de type "Exploiting these weaknesses" par rapport a cette doc:  
+En m'inspirant de cette doc, j'ai exploiter une vulnerabiliter de type "Exploiting these weaknesses":  
 https://blog.feabhas.com/2014/10/vulnerabilities-in-c-when-integers-go-bad/#Exploiting_these_weaknesses  
-Memcpy prend un size_t en troisieme argument, qui n accepte pas les valeurs inferieur a zero. Du coup si nous mettons -1 en premier parametre et que nous le converitssons dans sa valeur signed, nous obtenons ceci:  
+Memcpy prend un size_t en troisieme argument, qui n accepte pas les valeurs inferieur a zero. Du coup si nous mettons -1 en premier parametre et que nous le converitssons dans sa valeur unsigned, nous obtenons ceci:  
 (gdb) p/x -1  
 $11 = 0xffffffff  
-(gdb) p/d 0xffffffff  
+(gdb) p/u 0xffffffff  
 $12 = 4294967295  
+Le p/u signifie que nous voulons le resultat en unsigned int.  
 Nous pouvons voir que memcpy prend un troisieme parametre avec une taille impressionnante.
-Nous sommes deja a -1, et nous voulons pouvoir ecrire 44 bytes, nous pouvons donc continuer dans le negatif afin de remmettre un signe negatif a cette valeur pour qu il redevienne positif:  
-(gdb) p/d 4294967295-43
-/*$13 = 4294967252
-(gdb) p/d 4294967252/4
-$14 = 1073741813
-(gdb) p/d 4294967252%4
-$15 = 0  
-*/
+Nous sommes deja a -1, et nous voulons pouvoir ecrire 44 bytes (il nous reste donc 43 bytes), nous pouvons donc continuer dans le negatif afin de remmettre un signe negatif a cette valeur pour qu il redevienne positif:  
+  
 (gdb) p/u -(0xffffffff-43)  
 $29 = 44  
   
-Le p/u signifie que nous voulons le resultat en unsigned int.  
 Nous savons que le nombre sera multiplier par 4, vu que nous sommes en positif, nous devons de notre coter le diviser:  
   
 (gdb) p/d (0xffffffff-43)
