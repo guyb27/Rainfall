@@ -78,7 +78,7 @@
 `greetuser`
 
 ```assembly
-=> 0x08048484 <+0>:     push   ebp                       #  
+   0x08048484 <+0>:     push   ebp                       #  
    0x08048485 <+1>:     mov    ebp,esp                   #
    0x08048487 <+3>:     sub    esp,0x58                  # alloc 88 bytes
    0x0804848a <+6>:     mov    eax,ds:0x8049988          # set <language> value

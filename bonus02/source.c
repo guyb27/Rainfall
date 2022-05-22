@@ -8,7 +8,7 @@ int language = 0x2;
 
 int greetuser(char *buf) {
 	//Save $eip address: 0xbffff48c
-    int buff[73];
+    int buff[72];
 
     if (language == 0x1) {
         // buff[1:19] = "Hyvää päivää " 19 bytes

@@ -1,1 +1,0 @@
-Afin de resoudre ce challenge, il faut que le fichier "/home/user/end/.pass" soit accessible avec le user "end" et que argv[1] soit une string vide (""). Une fois ces conditions reunies, nous obtenons un shell.
