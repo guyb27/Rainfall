@@ -8,11 +8,11 @@ If `argc` is not equal to 3, the program exit.
 
 In `greetuser` function, we have a `strcat` on a local buffer of 72 bytes. The string concatened with this buffer depends on the environment variable `"LANG"`:
 
-- If `LANG` = `fi`, the concatened string will be "Hyvää päivää " (19 bytes)
+- If `LANG` = `fi`, the concatened string will be "Hyvää päivää " (18 bytes)
 
-- Else if `LANG` = `nl`, the concatened string will be "Goedemiddag! " (14 bytes)
+- Else if `LANG` = `nl`, the concatened string will be "Goedemiddag! " (13 bytes)
 
-- Else the concatened string will be "Hello " (14 bytes)
+- Else the concatened string will be "Hello " (6 bytes)
 
 In `greetuser` function, we can see that the local buffer begin 76 bytes before the `eip` address:
 
@@ -40,11 +40,11 @@ $2 = 76
 
 In the `main` function, we also see that only 40 bytes from the 1st parameter and 32 bytes from the 2nd parameter are copied. So 8 bytes must be added to overwrite `eip`.
 
-- If the `LANG` variable is equal to `fi`, the final string length will be 98 bytes
+- If the `LANG` variable is equal to `fi`, the string added takes 18 bytes. We need to pad with 18 bytes in the 2nd parameter (76 - 18 - 40)
 
-- Else if the `LANG` variable is equal to `nl`, the final string length will be 92 bytes
+- Else if the `LANG` variable is equal to `nl`, the string added takes 13 bytes. We need to pad with 23 bytes in the 2nd parameter (76 - 13 - 40)
 
-- Else the final string length will be 78 bytes, that is too short to overwrite `eip`
+- Else the string added is 6 bytes, that is too short to overwrite `eip`
 
 We try to overwrite `eip`:
 

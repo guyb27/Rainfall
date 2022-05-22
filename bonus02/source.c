@@ -4,11 +4,8 @@
 
 int language = 0x2;
 
-// "Hyvää päivää "
-
 int greetuser(char *buf) {
-	//Save $eip address: 0xbffff48c
-    int buff[72];
+    int buff[18];
 
     if (language == 0x1) {
         // buff[1:19] = "Hyvää päivää " 19 bytes
@@ -29,8 +26,9 @@ int greetuser(char *buf) {
         buff[1] = 0x00206f;
     }
 
-    strcat((char *)buff, buf);//buff address:0xbffff440, $eip address: 0xbffff48c
+    strcat((char *)buff, buf);
     puts((const char *)buff);
+
     return(0);
 }
 
