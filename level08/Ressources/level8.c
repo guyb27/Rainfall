@@ -7,26 +7,31 @@ int eax_int;
 int i;
 char *malloc_1;
 //malloc_1: 0x804a9c0
-void *service;
+// void *service;
 //service: 0x8049ab0
-void *auth;
+// void *auth;
 //auth: 0x8049aac
 //("auth "): 0x8048819 
 //("reset"): 0x804881f
 //("login"): 0x804882d
+
+void *service;
+void *auth;
+
 int main()
 {
+	char src[128];
+	
 	while(1)
 	{
-		printf("%p, %p\n", auth, service);//On affiche les adresse contenu dans la valeur de nos variables
-		if (!fgets(str_stdin, 0x80, stdin))//128
-			exit (0);
-		if (!strncmp(str_stdin, "auth ", 5))//De *main+87 a *main+126
+		printf("%p, %p\n", auth, service);
+		if (!fgets(src, 128, stdin))
+			break;;
+		if (!strncmp(src, "auth ", 5)) // de *main+87 a *main+126
 		{
-			malloc_1 = malloc(4);
-			auth = &malloc_1;
-			if (strlen(str_stdin) <= 34)//29 max apres "auth ", mais cette condition est inutile, on peut ne pas rentrer dedans ! De *main+156 a *main+196
-				strcpy(auth, str_stdin+5);//Le contenu ne nous interesse pas du tout ! car de toute facon il nous faut auth+32 !
+			auth = malloc(4);
+			if (strlen(src) <= 30) // de *main+156 a *main+196
+				strcpy(auth, &src[5]);
 		}
 		if (!strncmp(str_stdin, "reset", 5))//De *main+222 a *main+261
 			free(malloc_1);
