@@ -1,10 +1,29 @@
+# level05
+
 Here we have still our user input in the first argument of printf, I do not see other thing.
 
-When I do the "info functions" command in gdb, we can see the function "o" who is never called.
-If we examine it, we can see, it call system, uhmm, interesting...
+The program wait for an input, and print the result :
 
-To see the argument to system, we break at *n+54 and jump at *o+0 and break again at o+13.
-Okay system have as argument "/bin/sh".
+```bash
+
+```
+
+By looking at the assembly, we can see that the program call a function f, gets input from stdin with fgets and pass the result to printf.
+
+With "info functions", we can see that another function "o" is not called. It contains a call of system with "/bin/sh" as parameter :
+
+```gdb
+(gdb) info functions
+All defined functions:
+
+Non-debugging symbols:
+...
+0x080484a4  o
+0x080484c2  n
+0x08048504  main
+...
+```
+
 
 We execute my "loop_address.py" script and I found my user input as write in the fourth Direct Access Parameter
 

@@ -1,6 +1,6 @@
 
-int p(char *buf, char *dash) {
-    char s[4000];
+void p(char *buf, char *dash) {
+    char s[4096];
     char *schr;
 
     puts(dash);
@@ -8,22 +8,27 @@ int p(char *buf, char *dash) {
     schr = strchr(s, 10);
     *schr = 0x0;
     strncpy(buf, s, 20);
+    return;
 }
 
-int pp(char *buf) {
-    int buff_1[4];
-    int buff_2[4];
+void pp(char *src) {
+    int buf1[20];
+    int buf2[21];
 
-    p(buff_1, " - ");
-    p(buff_2, " - ");
+    p(buf1, " - ");
+    p(&buf2[1], " - ");
 
+    strcpy(src, buf1);
+    buf2[0] = " ";
+    strcat(&src[strlen(src)], buf2);
+    return;
 }
 
 int main() {
-    char buf_0[42];
+    char src[42];
 
-    pp(buf_0);
-    puts(buf_0);
+    pp(src);
+    puts(src);
 
     return (0);
 }

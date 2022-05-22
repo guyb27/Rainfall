@@ -29,34 +29,22 @@ int greetuser(char *buf) {
         buff[1] = 0x00206f;
     }
 
-    // char *hello = "Hello ";
     strcat((char *)buff, buf);//buff address:0xbffff440, $eip address: 0xbffff48c
-
     puts((const char *)buff);
-    return 1;
+    return(0);
 }
 
 int main(int argc, char *argv[]) {
     char buf[76];
-    // int []
     char *lang;
 
-    if (argc != 3) {
+    if (argc != 3)
         return (1);
-    }
 
     memset(buf, 0, 76);
     
     strncpy(buf, argv[1], 40);
-    // strncpy(&buf[40], argv[2], 32);
-
-    // for (int i = 0; i < 19; i += 1) {
-
-    // }
-    // while (i < 19) {
-    //     memset(&bufint[i], 0, 4);
-    //     i += 1;
-    // }
+    strncpy(&buf[40], argv[2], 32);
 
     if ((lang = getenv("LANG")) != NULL) {
         if (memcmp(lang, "fi", 2) == 0) {
@@ -66,16 +54,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    printf("%d\n", language);
-
     greetuser(buf);
 
-    // int bufint[19];
-    // int i = 0;
-
-    // while (i < 19) {
-    //     memset(&bufint[i], 0, 4);
-    //     i += 1;
-    // }
+    return(0);
 }
-//Ce que nous pouvons conclure de cette exercice c est que en fonction de la valeur de notre variable d environnement "LANG" la string de destination du strcat aura une taille variable, il nous faudra 

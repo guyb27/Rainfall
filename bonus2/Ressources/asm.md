@@ -3,53 +3,53 @@
 `main`
 
 ```assembly
-   0x08048529 <+0>:     push   ebp                      # Push stack base pointer
-   0x0804852a <+1>:     mov    ebp,esp                  # Set stack base pointer to stack pointer
-   0x0804852c <+3>:     push   edi                      # Push destination pointer
-   0x0804852d <+4>:     push   esi                      # Push source pointer
-   0x0804852e <+5>:     push   ebx                      # Push base pointer
-   0x0804852f <+6>:     and    esp,0xfffffff0           # Align stack on 16 (sub esp 12)
-   0x08048532 <+9>:     sub    esp,0xa0                 # Alloc 160 bytes
-   0x08048538 <+15>:    cmp    DWORD PTR [ebp+0x8],0x3  # Compare number of arguments and 3 
-   0x0804853c <+19>:    je     0x8048548 <main+31>      # Jump to +31 if equal
-   0x0804853e <+21>:    mov    eax,0x1                  # Set eax to 1
-   0x08048543 <+26>:    jmp    0x8048630 <main+263>     # Jump to +263
-   0x08048548 <+31>:    lea    ebx,[esp+0x50]           # Set ebx to esp+80 value
-   0x0804854c <+35>:    mov    eax,0x0                  # Set 0 to eax
-   0x08048551 <+40>:    mov    edx,0x13                 # Set 19 to edx
-   0x08048556 <+45>:    mov    edi,ebx                  # Set ebx (esp+80) to edi
-   0x08048558 <+47>:    mov    ecx,edx                  # Set edx (19) to ecx
-   0x0804855a <+49>:    rep stos DWORD PTR es:[edi],eax # Repeat string operation : for ecx, store eax to edi, incrementing 4 bytes each time
-   0x0804855c <+51>:    mov    eax,DWORD PTR [ebp+0xc]  # Get argv
-   0x0804855f <+54>:    add    eax,0x4                  # Get argv+1
-   0x08048562 <+57>:    mov    eax,DWORD PTR [eax]      # Derefence eax (now points on argv+1)
-   0x08048564 <+59>:    mov    DWORD PTR [esp+0x8],0x28 # Set 40 to esp+8 (3th arg)
-   0x0804856c <+67>:    mov    DWORD PTR [esp+0x4],eax  # Set eax (argv+1 string) to esp+4 (2nd arg)
-   0x08048570 <+71>:    lea    eax,[esp+0x50]           # Set eax to esp+80 value
-   0x08048574 <+75>:    mov    DWORD PTR [esp],eax      # Set eax to esp value
-   0x08048577 <+78>:    call   0x80483c0 <strncpy@plt>  # Call strncpy
-   0x0804857c <+83>:    mov    eax,DWORD PTR [ebp+0xc]  # Get argv
-   0x0804857f <+86>:    add    eax,0x8                  # Get argv+2
-   0x08048582 <+89>:    mov    eax,DWORD PTR [eax]      # Derefence eax (now points on argv+2)
-   0x08048584 <+91>:    mov    DWORD PTR [esp+0x8],0x20 # Set esp+8 value to 32
-   0x0804858c <+99>:    mov    DWORD PTR [esp+0x4],eax  # Set esp+4 value to eax (argv+2 string)
-   0x08048590 <+103>:   lea    eax,[esp+0x50]           # Set eax to esp+80 value
-   0x08048594 <+107>:   add    eax,0x28                 # Set eax to esp+120
-   0x08048597 <+110>:   mov    DWORD PTR [esp],eax      # Set eax to esp value
-   0x0804859a <+113>:   call   0x80483c0 <strncpy@plt>  # Call strncpy 
-   0x0804859f <+118>:   mov    DWORD PTR [esp],0x8048738# Set "LANG" to esp value
-   0x080485a6 <+125>:   call   0x8048380 <getenv@plt>   # Call getenv
-   0x080485ab <+130>:   mov    DWORD PTR [esp+0x9c],eax # Set getenv return to esp+156 value
-   0x080485b2 <+137>:   cmp    DWORD PTR [esp+0x9c],0x0 # Compare getenv return with 0
-   0x080485ba <+145>:   je     0x8048618 <main+239>     # Jump to +239 if equal
-   0x080485bc <+147>:   mov    DWORD PTR [esp+0x8],0x2  # 3th arg to 2
-   0x080485c4 <+155>:   mov    DWORD PTR [esp+0x4],0x804873d # 2nd arg to "fi"
-   0x080485cc <+163>:   mov    eax,DWORD PTR [esp+0x9c] # esp+156 value to eax
-   0x080485d3 <+170>:   mov    DWORD PTR [esp],eax      # 1th arg to getenv return
-   0x080485d6 <+173>:   call   0x8048360 <memcmp@plt>   # 
+   0x08048529 <+0>:     push   ebp                      #
+   0x0804852a <+1>:     mov    ebp,esp                  #
+   0x0804852c <+3>:     push   edi                      #
+   0x0804852d <+4>:     push   esi                      #
+   0x0804852e <+5>:     push   ebx                      #
+   0x0804852f <+6>:     and    esp,0xfffffff0           # align stack on 16 (sub esp 12)
+   0x08048532 <+9>:     sub    esp,0xa0                 # alloc 160 bytes
+   0x08048538 <+15>:    cmp    DWORD PTR [ebp+0x8],0x3  # 
+   0x0804853c <+19>:    je     0x8048548 <main+31>      # jmp if argc == 3
+   0x0804853e <+21>:    mov    eax,0x1                  #
+   0x08048543 <+26>:    jmp    0x8048630 <main+263>     # return 1
+   0x08048548 <+31>:    lea    ebx,[esp+0x50]           #
+   0x0804854c <+35>:    mov    eax,0x0                  # 0
+   0x08048551 <+40>:    mov    edx,0x13                 # 19
+   0x08048556 <+45>:    mov    edi,ebx                  #
+   0x08048558 <+47>:    mov    ecx,edx                  #
+   0x0804855a <+49>:    rep stos DWORD PTR es:[edi],eax # repeat string operation : memset(buf[76])
+   0x0804855c <+51>:    mov    eax,DWORD PTR [ebp+0xc]  #
+   0x0804855f <+54>:    add    eax,0x4                  #
+   0x08048562 <+57>:    mov    eax,DWORD PTR [eax]      #
+   0x08048564 <+59>:    mov    DWORD PTR [esp+0x8],0x28 #
+   0x0804856c <+67>:    mov    DWORD PTR [esp+0x4],eax  #
+   0x08048570 <+71>:    lea    eax,[esp+0x50]           #
+   0x08048574 <+75>:    mov    DWORD PTR [esp],eax      #
+   0x08048577 <+78>:    call   0x80483c0 <strncpy@plt>  # strncpy(buf[76], argv[1], 40)
+   0x0804857c <+83>:    mov    eax,DWORD PTR [ebp+0xc]  #
+   0x0804857f <+86>:    add    eax,0x8                  #
+   0x08048582 <+89>:    mov    eax,DWORD PTR [eax]      #
+   0x08048584 <+91>:    mov    DWORD PTR [esp+0x8],0x20 #
+   0x0804858c <+99>:    mov    DWORD PTR [esp+0x4],eax  #
+   0x08048590 <+103>:   lea    eax,[esp+0x50]           #
+   0x08048594 <+107>:   add    eax,0x28                 #
+   0x08048597 <+110>:   mov    DWORD PTR [esp],eax      #
+   0x0804859a <+113>:   call   0x80483c0 <strncpy@plt>  # strncpy(buf[76]+40, argv[2], 32) 
+   0x0804859f <+118>:   mov    DWORD PTR [esp],0x8048738#
+   0x080485a6 <+125>:   call   0x8048380 <getenv@plt>   # getenv("LANG")
+   0x080485ab <+130>:   mov    DWORD PTR [esp+0x9c],eax # on esp+156
+   0x080485b2 <+137>:   cmp    DWORD PTR [esp+0x9c],0x0 #
+   0x080485ba <+145>:   je     0x8048618 <main+239>     # jmp if getenv("LANG") == 0
+   0x080485bc <+147>:   mov    DWORD PTR [esp+0x8],0x2  #
+   0x080485c4 <+155>:   mov    DWORD PTR [esp+0x4],0x804873d
+   0x080485cc <+163>:   mov    eax,DWORD PTR [esp+0x9c] #
+   0x080485d3 <+170>:   mov    DWORD PTR [esp],eax      #
+   0x080485d6 <+173>:   call   0x8048360 <memcmp@plt>   # memcmp(getenv("LANG"), "fi", 2)
    0x080485db <+178>:   test   eax,eax                  # test if eax == 0
-   0x080485dd <+180>:   jne    0x80485eb <main+194>     # jump to +194 if not true
-   0x080485df <+182>:   mov    DWORD PTR ds:0x8049988,0x1 # 
+   0x080485dd <+180>:   jne    0x80485eb <main+194>     # jmp if memcmp != 0
+   0x080485df <+182>:   mov    DWORD PTR ds:0x8049988,0x1
    0x080485e9 <+192>:   jmp    0x8048618 <main+239>
    0x080485eb <+194>:   mov    DWORD PTR [esp+0x8],0x2  # 3th arg to 2
    0x080485f3 <+202>:   mov    DWORD PTR [esp+0x4],0x8048740 # 2nd arg to "nl"

