@@ -21,7 +21,7 @@ int main()
 		}
 		if (!strncmp(src, "reset", 5))
 			free(auth);
-		if (!strncmp(src, "service", 7))
+		if (!strncmp(src, "service", 6))
 			service = strdup(&src[7]);
 		if (!strncmp(src, "login", 5))
 		{
