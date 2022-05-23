@@ -1,7 +1,5 @@
 # level1
 
-We can first see that the [NX-bit](https://en.wikipedia.org/wiki/NX_bit) is disabled, compared to the previous level.
-
 The program take no parameters but wait for input once launched. It prints the string passed in input and segfault with a large string :
 
 ```bash
@@ -38,7 +36,7 @@ End of assembler dump.
 0x8048584:  "/bin/sh"
 ```
 
-By looking at the assembly code, we can see that the main function only calls `gets`, a function known to be [vulnerable to buffer overflow](https://faq.cprogramming.com/cgi-bin/smartfaq.cgi?answer=1049157810&id=1043284351).
+By looking at the assembly code, we can see that the main function only calls `gets`, a function known to be vulnerable to buffer overflow.
 
 To find the buffer length, we run the program with `gdb` with a breakpoint after the `gets` call.
 
