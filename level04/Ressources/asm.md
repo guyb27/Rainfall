@@ -5,15 +5,15 @@
 `n`
 
 ```assembly
-   0x08048457 <+0>:     push   ebp                          # Push Base Pointer
-   0x08048458 <+1>:     mov    ebp,esp                      # Set esp to ebp
-   0x0804845a <+3>:     sub    esp,0x218                    # Allocate 536 bytes
+   0x08048457 <+0>:     push   ebp                          #
+   0x08048458 <+1>:     mov    ebp,esp                      #
+   0x0804845a <+3>:     sub    esp,0x218                    # allocate 536 bytes
    0x08048460 <+9>:     mov    eax,ds:0x8049804             # Set stdin to eax
    0x08048465 <+14>:    mov    DWORD PTR [esp+0x8],eax      # Set eax(stdin) to esp+8
    0x08048469 <+18>:    mov    DWORD PTR [esp+0x4],0x200    # Set 512 to esp+4
    0x08048471 <+26>:    lea    eax,[ebp-0x208]              # Set [ebp-520] 
    0x08048477 <+32>:    mov    DWORD PTR [esp],eax
-   0x0804847a <+35>:    call   0x8048350 <fgets@plt>
+   0x0804847a <+35>:    call   0x8048350 <fgets@plt>        
    0x0804847f <+40>:    lea    eax,[ebp-0x208]
    0x08048485 <+46>:    mov    DWORD PTR [esp],eax
    0x08048488 <+49>:    call   0x8048444 <p>
