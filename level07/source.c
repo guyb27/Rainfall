@@ -3,6 +3,11 @@
 #include <string.h>
 #include <time.h>
 
+typedef struct s_buffer {
+    int i;
+    int *j;
+}   t_buffer;
+
 char	c[68];
 
 void	m(void) {
@@ -10,29 +15,21 @@ void	m(void) {
 }
 
 int		main(int argc, const char *argv[]) {
-    // int *v1 = (8); // 0x0804a008
-    // v1[0] = 0x1;
+    t_buffer *buf_1;
+    t_buffer *buf_2;
 
-    // int *v2 = malloc(8); // 0x0804a018
-    // v1[1] = v2;
+    buf_1 = malloc(sizeof(t_buffer));
+    buf_1->i = 0x1;
+    buf_1->j = malloc(8);
 
-    // int *v3 = malloc(8); // 0x804a028
-    // v3[0] = 0x2;
+    buf_2 = malloc(sizeof(t_buffer));
+    buf_2->i = 0x2;
+    buf_2->j = malloc(8);
 
-    // int *v4 = malloc(8); // 0x804a038
-    // v3[1] = v4;
+    strcpy((char *)buf_1->j, argv[1]);
+    strcpy((char *)buf_2->j, argv[2]);
 
-    // char *arg1 = av[1];
-    int *i1 = malloc(8);
-    i1[0] = 0x1;
-    i1[1] = (int)malloc(8);
-
-    int *i2 = malloc(8);
-    i2[0] = 0x2;
-    i2[1] = (int)malloc(8);
-
-    strcpy((char *)i1[1], argv[1]);
-    strcpy((char *)i2[1], argv[2]);
+    fgets(c, 68, fopen("/home/user/level8/.pass", "r"));
 
     puts("~~");
     return 0;

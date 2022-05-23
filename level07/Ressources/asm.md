@@ -60,3 +60,20 @@
    0x08048601 <+224>:   leave  
    0x08048602 <+225>:   ret 
 ```
+
+`m`
+
+```assembly
+   0x080484f4 <+0>:     push   ebp
+   0x080484f5 <+1>:     mov    ebp,esp
+   0x080484f7 <+3>:     sub    esp,0x18
+   0x080484fa <+6>:     mov    DWORD PTR [esp],0x0
+   0x08048501 <+13>:    call   0x80483d0 <time@plt>      # time(0)
+   0x08048506 <+18>:    mov    edx,0x80486e0
+   0x0804850b <+23>:    mov    DWORD PTR [esp+0x8],eax
+   0x0804850f <+27>:    mov    DWORD PTR [esp+0x4],0x8049960
+   0x08048517 <+35>:    mov    DWORD PTR [esp],edx
+   0x0804851a <+38>:    call   0x80483b0 <printf@plt>    # printf("%s - %d\n", c, time(0))
+   0x0804851f <+43>:    leave  
+   0x08048520 <+44>:    ret   
+```
