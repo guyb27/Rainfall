@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 
-int language = 0x2;
+int language = 0x0;
 
 int greetuser(char *buf) {
     int buff[18];
